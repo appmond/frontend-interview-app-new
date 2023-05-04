@@ -1,11 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useAppSelector, useAppDispatch } from '../state/hooks'
+import { buyflowActionCreators } from '../state'
+import { bindActionCreators } from '@reduxjs/toolkit'
+import { ProductIds } from '../config/constants'
 
-interface AgeStepProps {
-  cb: (field: string, value: number) => void
-}
-
-const AgeStep: React.FC<AgeStepProps> = (props) => {
-  const [age, setAge] = useState(0)
+const AgeStep: React.FC = () => {
+  const dispatch = useAppDispatch()
+  const { age, selectedProduct } = useAppSelector(
+    (state) => state.buyflowReducer
+  )
+  const { setAge, setCurrentStep } = bindActionCreators(
+    buyflowActionCreators,
+    dispatch
+  )
   return (
     <>
       <div>
@@ -18,7 +25,15 @@ const AgeStep: React.FC<AgeStepProps> = (props) => {
           value={age}
         ></input>
       </div>
-      <button onClick={() => props.cb('age', age)}>Next</button>
+      <button
+        onClick={() =>
+          setCurrentStep(
+            selectedProduct === ProductIds.desInsurance ? 'name' : 'summary'
+          )
+        }
+      >
+        Next
+      </button>
     </>
   )
 }

@@ -1,11 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useAppSelector, useAppDispatch } from '../state/hooks'
+import { buyflowActionCreators } from '../state'
+import { bindActionCreators } from '@reduxjs/toolkit'
 
-interface EmailStepProps {
-  cb: (field: string, value: string) => void
-}
-
-const EmailStep: React.FC<EmailStepProps> = (props) => {
-  const [email, setEmail] = useState('')
+const EmailStep: React.FC = () => {
+  const dispatch = useAppDispatch()
+  const { email } = useAppSelector((state) => state.buyflowReducer)
+  const { setEmail, setCurrentStep } = bindActionCreators(
+    buyflowActionCreators,
+    dispatch
+  )
   return (
     <>
       <div>
@@ -18,7 +22,7 @@ const EmailStep: React.FC<EmailStepProps> = (props) => {
           value={email}
         ></input>
       </div>
-      <button onClick={() => props.cb('email', email)}>Next</button>
+      <button onClick={() => setCurrentStep('age')}>Next</button>
     </>
   )
 }
